@@ -3,10 +3,9 @@
         <my-header v-on:getOrder="getOrder"></my-header>
         <div class="btn">
         <div class="search">
-            <mt-search v-model="value" cancel-text="取消" placeholder="订单编号/宝贝标题">
-            </mt-search>           
+            <input class="my-input" style="text" v-model="value" />      
         </div>       
-            <mt-button @click="search" class="my-btn" type="primary">搜索</mt-button>
+            <mt-button @click="search" placehold="请搜索订单名称或订单号" class="my-btn" type="primary">搜索</mt-button>
          </div>
         <div class="order-list">
             <div class="order-list-item" v-for="item in orderList">
@@ -28,7 +27,7 @@
                     </table>
                 </div>
             </div>
-            <div class="loadingMore" @click="myLoad">点击继续加载数据</div>
+            <div v-show="isShow" class="loadingMore" @click="myLoad">点击继续加载数据</div>
         </div>
     </div>
 </template>
@@ -49,11 +48,16 @@ export default {
             value: '',
             orderList: [],
             dataType: 'Day',
-            data: {}
+            data: {},
+            isShow: true
         }
     },
     methods: {
-        getOrder(data) {          
+        getOrder(data) {   
+            this.isShow = true 
+           if(data.data.length < 10) {
+                this.isShow = false
+            }      
             this.orderList = data.data
             this.dateType = data.dateType
             pages = 0
@@ -67,7 +71,10 @@ export default {
                 userCode: that.userCode,
                 dateType: that.dateType,
                 pages: pages
-            }).then( res => {                 
+            }).then( res => {  
+            if(res.data.Data.length < 10) {
+                that.isShow = false
+            }               
                 that.orderList = that.orderList.concat(res.data.Data)
             })         
            
@@ -82,6 +89,9 @@ export default {
         }).then( res => {
             console.log('订单数据',res.data.Data)
             that.orderList = res.data.Data
+            if(res.data.Data.length < 10) {
+                that.isShow = false
+            }
         })
         }
     },
@@ -94,6 +104,9 @@ export default {
         }).then( res => {
             console.log('订单数据',res.data.Data)
             that.orderList = res.data.Data
+            if(res.data.Data.length < 10) {
+                that.isShow = false
+            }
         })
     },
     components: {
@@ -105,6 +118,11 @@ export default {
 <style scoped>
 .btn {
     overflow: hidden;
+}
+
+.my-input {
+    height: 40px;
+    width: 90%;
 }
 .search {
     margin-top: 10px;
