@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <h4 class="partner-list-header">我的一级合伙人:</h4>
+        <h4 class="partner-list-header">下一级合伙人:</h4>
         <div class="partner-list">
             <div v-for="item in userInfo.Sublevel" class="partner-list-item">
                 <div class="partner-list-title">
